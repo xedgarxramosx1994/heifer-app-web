@@ -1,27 +1,39 @@
-# HeiferApp
+# Sistema de Cálculo de Costo de Producción de Productos
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.6.
+Este proyecto es una aplicación web construida con Angular que permite calcular el costo de producción de varios productos, como pasteles y tartas, detallando los ingredientes y su costo unitario. 
 
-## Development server
+## Descripción del Sistema
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+El sistema está diseñado para permitir a los usuarios ver una lista de productos, seleccionar un producto para ver sus detalles y calcular el costo de producción basado en los ingredientes utilizados. La aplicación utiliza PrimeNG para componentes de la interfaz de usuario y sigue una arquitectura modular para mantener el código organizado y fácil de mantener.
 
-## Code scaffolding
+## Estructura del Proyecto
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```plaintext
+src/
+├── app/
+│   ├── components/
+│   │   ├── product/
+│   │   │   ├── product-list/
+│   │   │   │   ├── product-list.component.html
+│   │   │   │   ├── product-list.component.ts
+│   │   │   │   └── product-list.component.css
+│   │   │   ├── product-detail/
+│   │   │   │   ├── product-detail.component.html
+│   │   │   │   ├── product-detail.component.ts
+│   │   │   │   └── product-detail.component.css
+│   ├── services/
+│   │   ├── product.service.ts
+│   │   ├── cost.service.ts
+│   ├── models/
+│   │   ├── product.model.ts
+│   │   ├── cost.model.ts
+│   ├── pages/
+│   │   ├── home/
+│   │   │   ├── home.component.html
+│   │   │   ├── home.component.ts
+│   │   │   └── home.component.css
+│   ├── app-routing.module.ts
+│   ├── app.component.html
+│   ├── app.component.ts
+│   ├── app.component.css
+│   └── app.module.ts
