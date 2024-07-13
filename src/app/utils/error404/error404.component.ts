@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-error404',
   standalone: true,
   imports: [],
-  templateUrl: './home.component.html',
+  templateUrl: './error404.component.html',
   styles: ``
 })
-export class HomeComponent {
+export class Error404Component {
 
 }

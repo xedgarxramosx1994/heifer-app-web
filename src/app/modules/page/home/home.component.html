@@ -1,0 +1,20 @@
+<p-galleria
+    [value]="images"
+    [responsiveOptions]="responsiveOptions"
+    [showIndicators]="false"
+    [showThumbnails]="false"
+    [containerStyle]="{ 'width': '100vw', 'height': '100vh' }"
+>
+    <ng-template pTemplate="item" let-item>
+        <div class="galleria-item-container">
+            <img [src]="item.itemImageSrc" />
+            <div class="overlay">
+                <div class="description">
+                    <h2>{{item.title}}</h2>
+                    <p>{{item.description}}</p>
+                    <button pButton type="button" label="Comencemos" class="start-button" [routerLink]="['/product']"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-galleria>
