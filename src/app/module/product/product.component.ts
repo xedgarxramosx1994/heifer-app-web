@@ -3,6 +3,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { feedstock } from './interfaces/feedstock';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-product',
@@ -17,9 +19,12 @@ export class ProductComponent {
   thirdFormGroup: FormGroup | any;
   fourthFormGroup: FormGroup | any;
   fifthFormGroup: FormGroup | any;
+  sixthFormGroup: FormGroup | any;
   isEditable = true;
   materiasPrimas: any[] = [];
   manoDeObra: any[] = [];
+  costoIndirecto: any[] = [];
+  maquinaria: any[] = [];
 
   categories: any[] = [
     { id: 1, name: 'Servicios' },
@@ -84,10 +89,10 @@ export class ProductComponent {
     });
 
     this.secondFormGroup = this._formBuilder.group({
-      name: [''],
-      quantity: [''],
-      unit: [''],
-      unitCost: ['']
+      name: ['', Validators.required],
+      quantity: ['', Validators.required],
+      unit: ['', Validators.required],
+      unitCost: ['', Validators.required]
     });
 
     this.thirdFormGroup = this._formBuilder.group({
@@ -97,6 +102,11 @@ export class ProductComponent {
     });
 
     this.fourthFormGroup = this._formBuilder.group({
+      description: ['', Validators.required],
+      amount: ['', Validators.required]
+    });
+
+    this.fifthFormGroup = this._formBuilder.group({
       description: ['', Validators.required],
       amount: ['', Validators.required]
     });
@@ -111,6 +121,9 @@ export class ProductComponent {
       const materiaPrima = this.secondFormGroup.value as feedstock;
       this.materiasPrimas.push(materiaPrima);
       this.secondFormGroup.reset();
+      Object.keys(this.secondFormGroup.controls).forEach(key => {
+        this.secondFormGroup.get(key).setErrors(null);
+      });
     } else {
       this.secondFormGroup.markAllAsTouched();
     }
@@ -124,6 +137,9 @@ export class ProductComponent {
       const manoObra = this.thirdFormGroup.value;
       this.manoDeObra.push(manoObra);
       this.thirdFormGroup.reset();
+      Object.keys(this.thirdFormGroup.controls).forEach(key => {
+        this.secondFormGroup.get(key).setErrors(null);
+      });
     }
     else{
       this.thirdFormGroup.markAllAsTouched();
@@ -134,15 +150,66 @@ export class ProductComponent {
     this.manoDeObra.splice(index, 1);
   }
 
+  addCostoIndirecto(){
+    if(this.fourthFormGroup.valid){
+      const costoIndirecto = this.fourthFormGroup.value;
+      this.costoIndirecto.push(costoIndirecto);
+      this.fourthFormGroup.reset();
+      // Reset error state
+      Object.keys(this.fourthFormGroup.controls).forEach(key => {
+        this.secondFormGroup.get(key).setErrors(null);
+      });
+    }
+    else{
+      this.fourthFormGroup.markAllAsTouched();
+    }
+  }
+
+  removeCostoIndirecto(index: number){
+    this.costoIndirecto.splice(index, 1);
+  }
+
+  addMaquinaria(){
+    if(this.fifthFormGroup.valid){
+      const maquinaria = this.fifthFormGroup.value;
+      this.maquinaria.push(maquinaria);
+      this.fifthFormGroup.reset();
+      Object.keys(this.fifthFormGroup.controls).forEach(key => {
+        this.secondFormGroup.get(key).setErrors(null);
+      });
+    }
+    else{
+      this.fifthFormGroup.markAllAsTouched();
+    }
+  }
+
+  removeMaquinaria(index: number){
+    this.maquinaria.splice(index, 1);
+  }
+
   canProceedToNextStep(): boolean {
     return this.materiasPrimas.length > 0;
   }
 
+  canProceedToNextStepThird(): boolean {
+    return this.materiasPrimas.length > 0;
+  }
+
+  canProceedToNextStepForth(): boolean {
+    return this.materiasPrimas.length > 0;
+  }
+
   validateAndProceed(stepper: any) {
-    console.log(this.canProceedToNextStep())
     if (this.canProceedToNextStep()) {
       stepper.next();
-    } else {
+    } 
+    else if(this.canProceedToNextStepThird()){
+      stepper.next();
+    }
+    else if(this.canProceedToNextStepForth()){
+      stepper.next();
+    }
+    else {
       this.secondFormGroup.markAllAsTouched();
     }
   }
@@ -159,5 +226,41 @@ export class ProductComponent {
   getMeasureName(unitId: number): string {
     const measure = this.measures.find(measure => measure.id === unitId);
     return measure ? measure.name : 'N/A';
+  }
+
+  getTotal(section: string): number {
+    switch (section) {
+      case 'materiaPrima':
+        return this.materiasPrimas.reduce((total, item) => total + item.quantity * item.unitCost, 0);
+      case 'manoObra':
+        return this.manoDeObra.reduce((total, item) => total + item.quantity * item.hourlyCost, 0);
+      case 'indirectos':
+        return this.costoIndirecto.reduce((total, item) => total + item.amount, 0);
+      case 'produccion':
+        return this.getTotal('materiaPrima') + this.getTotal('manoObra') + this.getTotal('indirectos');
+      default:
+        return 0;
+    }
+  }
+
+  exportToExcel() {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataToExport());
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, 'resultados');
+  }
+
+  dataToExport() {
+    return [
+      { sección: 'Materia Prima', costo: this.getTotal('materiaPrima') },
+      { sección: 'Mano de Obra', costo: this.getTotal('manoObra') },
+      { sección: 'Indirectos', costo: this.getTotal('indirectos') },
+      { sección: 'Producción', costo: this.getTotal('produccion') }
+    ];
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 }
