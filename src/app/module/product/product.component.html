@@ -111,8 +111,8 @@
                     </mat-card-content>
                     <mat-card-actions>
                         <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
-                        <button mat-raised-button matStepperNext color="primary"
-                            class="primary-button">Siguiente</button>
+                        <button mat-raised-button color="primary"
+                            class="primary-button" (click)="validateAndProceed(stepper)">Siguiente</button>
                     </mat-card-actions>
                 </mat-card>
             </div>

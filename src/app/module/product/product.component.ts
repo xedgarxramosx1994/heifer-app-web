@@ -3,6 +3,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { feedstock } from './interfaces/feedstock';
+import { MatStepperNext } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-product',
@@ -111,6 +112,10 @@ export class ProductComponent {
       const materiaPrima = this.secondFormGroup.value as feedstock;
       this.materiasPrimas.push(materiaPrima);
       this.secondFormGroup.reset();
+      // Reset error state
+      Object.keys(this.secondFormGroup.controls).forEach(key => {
+        this.secondFormGroup.get(key).setErrors(null);
+      });
     } else {
       this.secondFormGroup.markAllAsTouched();
     }
@@ -124,6 +129,10 @@ export class ProductComponent {
       const manoObra = this.thirdFormGroup.value;
       this.manoDeObra.push(manoObra);
       this.thirdFormGroup.reset();
+      // Reset error state
+      Object.keys(this.thirdFormGroup.controls).forEach(key => {
+        this.thirdFormGroup.get(key).setErrors(null);
+      });
     }
     else{
       this.thirdFormGroup.markAllAsTouched();
@@ -143,7 +152,7 @@ export class ProductComponent {
     if (this.canProceedToNextStep()) {
       stepper.next();
     } else {
-      this.secondFormGroup.markAllAsTouched();
+      this.secondFormGroup.markAllAsTouched();      
     }
   }
 
