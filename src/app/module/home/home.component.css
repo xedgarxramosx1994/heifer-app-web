@@ -1,0 +1,61 @@
+.login-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .login-card {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .login-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .login-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .login-button {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: #003566;
+  }
+  
+  .forgot-password-link {
+    margin-top: 1rem;
+    color: #003566;
+    text-align: center;
+  }
+  
+  .welcome-image {
+    width: 60%;
+    background: url('https://bloglatam.jacto.com/wp-content/uploads/2022/07/tipos-de-ganaderia.jpeg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .welcome-text {
+    color: white;
+    font-size: 3rem;
+  }
+
+  .logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  width: 400px;; /* Ajusta este valor según sea necesario */
+}
