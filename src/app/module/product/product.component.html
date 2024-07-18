@@ -1,0 +1,333 @@
+<mat-stepper linear #stepper>
+    <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
+        <form [formGroup]="firstFormGroup" autocomplete="off">
+            <ng-template matStepLabel>Crear producto</ng-template>
+            <div class="centered-card-container">
+                <mat-card class="centered-card">
+                    <mat-card-header>
+                        <mat-card-title>Crear producto</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field class="full-width-field">
+                            <mat-label>Nombre del producto</mat-label>
+                            <input matInput formControlName="name" placeholder="Introduce el nombre del producto"
+                                required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="full-width-field" (selectionChange)="onCategoryChange($event)">
+                            <mat-label>Seleccione una categoría</mat-label>
+                            <mat-select formControlName="categories">
+                                <mat-option *ngFor="let category of categories" [value]="category.id">{{
+                                    category.name}}</mat-option>
+                            </mat-select>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="full-width-field" *ngIf="selectedSubCategories.length > 0">
+                            <mat-label>Seleccione una subcategoría</mat-label>
+                            <mat-select formControlName="subCategories">
+                                <mat-option *ngFor="let subcategory of selectedSubCategories" [value]="subcategory.id">
+                                    {{ subcategory.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary" class="primary-button"
+                            matStepperNext>Siguiente</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
+        <form [formGroup]="secondFormGroup" autocomplete="off">
+            <ng-template matStepLabel>Crear materia prima</ng-template>
+            <div class="centered-card-container">
+                <mat-card class="centered-card">
+                    <mat-card-header>
+                        <mat-card-title>Materia prima</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Nombre de la materia prima</mat-label>
+                            <input matInput formControlName="name" placeholder="Introduce el nombre de la materia prima"
+                                required>
+                            <mat-error
+                                *ngIf="secondFormGroup.get('name').hasError('required') && secondFormGroup.get('name').touched">
+                                Campo obligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Cantidad utilizada</mat-label>
+                            <input matInput formControlName="quantity" placeholder="Introduce la cantidad utilizada"
+                                type="number" required>
+                            <mat-error
+                                *ngIf="secondFormGroup.get('quantity').hasError('required') && secondFormGroup.get('quantity').touched">
+                                Campo obligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Unidad de medida</mat-label>
+                            <mat-select formControlName="unit" placeholder="Selecciona una medida" required>
+                                <mat-option *ngFor="let measure of measures"
+                                    [value]="measure.id">{{measure.name}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="secondFormGroup.get('unit').hasError('required') && secondFormGroup.get('unit').touched">
+                                Campo obligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Costo por unidad</mat-label>
+                            <input matInput formControlName="unitCost" type="number"
+                                placeholder="Introduce el costo por unidad" required>
+                            <mat-error
+                                *ngIf="secondFormGroup.get('unitCost').hasError('required') && secondFormGroup.get('unitCost').touched">
+                                Campo obligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <div>
+                            <button mat-flat-button class="full-width" [disabled]="secondFormGroup.invalidate"
+                                (click)="addMateriaPrima()"><mat-icon>add</mat-icon> Agregar materia
+                                prima</button>
+                        </div>
+                        <div *ngIf="materiasPrimas.length > 0" class="product-list">
+                            <mat-card *ngFor="let materiaPrima of materiasPrimas; let i = index" class="product-item">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="product-avatar">
+                                        <img src="./icons/grocery.png" alt="icon" class="product-icon">
+                                    </div>
+                                    <mat-card-title>{{ materiaPrima.name }}</mat-card-title>
+                                    <mat-card-subtitle>{{ materiaPrima.quantity }} {{ getMeasureName(materiaPrima.unit)
+                                        }} - {{
+                                        materiaPrima.unitCost | currency }}</mat-card-subtitle>
+                                    <button mat-icon-button color="warn" (click)="removeMateriaPrima(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-card-header>
+                            </mat-card>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
+                        <button mat-raised-button (click)="validateAndProceed(stepper)" color="primary"
+                            class="primary-button">Siguiente</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup" [editable]="isEditable">
+        <form [formGroup]="thirdFormGroup">
+            <ng-template matStepLabel>Crear mano de obra</ng-template>
+            <div class="centered-card-container">
+                <mat-card class="centered-card">
+                    <mat-card-header>
+                        <mat-card-title>Mano de obra</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Tipo de mano de obra</mat-label>
+                            <input matInput formControlName="type" placeholder="Ingresa el tipo de mano de obra"
+                                required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Cantidad de horas/Empleado</mat-label>
+                            <input matInput formControlName="quantity"
+                                placeholder="Ingresa la cantidad de horas/empleado" type="number" required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Costo por hora/Empleado</mat-label>
+                            <input matInput formControlName="hourlyCost"
+                                placeholder="Ingresa el costo por hora/empleado" type="number" required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <div>
+                            <button mat-flat-button class="full-width" [disabled]="thirdFormGroup.invalidate"
+                                (click)="addManoDeObra()"><mat-icon>add</mat-icon> Agregar mano
+                                de obra</button>
+                        </div>
+                        <div *ngIf="manoDeObra.length > 0" class="product-list">
+                            <mat-card *ngFor="let manoObra of manoDeObra; let i = index" class="product-item">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="product-avatar">
+                                        <img src="./icons/settings_accessibility.png" alt="icon" class="product-icon">
+                                    </div>
+                                    <mat-card-title>{{ manoObra.type }}</mat-card-title>
+                                    <mat-card-subtitle>{{ manoObra.quantity }} Hora(s) - {{
+                                        manoObra.hourlyCost | currency }}</mat-card-subtitle>
+                                    <button mat-icon-button color="warn" (click)="removeManoDeObra(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-card-header>
+                            </mat-card>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
+                        <button mat-raised-button (click)="validateAndProceed(stepper)" color="primary"
+                            class="primary-button">Siguiente</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="fourthFormGroup" [editable]="isEditable">
+        <form [formGroup]="fourthFormGroup" autocomplete="off">
+            <ng-template matStepLabel>Crear costos indirectos</ng-template>
+            <div class="centered-card-container">
+                <mat-card class="centered-card">
+                    <mat-card-header>
+                        <mat-card-title>Costos indirectos</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Descripción del costo indirecto</mat-label>
+                            <input matInput formControlName="description"
+                                placeholder="Introduce la descripción del costo indirecto" required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Monto del costo indirecto</mat-label>
+                            <input matInput formControlName="amount"
+                                placeholder="Introduce el monto del costo indirecto" type="number" required>
+                            <mat-error>Campo obligatorio</mat-error>
+                        </mat-form-field>
+                        <div>
+                            <button mat-flat-button class="full-width" [disabled]="fourthFormGroup.invalidate"
+                                (click)="addCostoIndirecto()"><mat-icon>add</mat-icon> Agregar costo
+                                indirecto</button>
+                        </div>
+                        <div *ngIf="costoIndirecto.length > 0" class="product-list">
+                            <mat-card *ngFor="let costo of costoIndirecto; let i = index" class="product-item">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="product-avatar">
+                                        <img src="./icons/card_travel.png" alt="icon" class="product-icon">
+                                    </div>
+                                    <mat-card-title>{{costo.description }}</mat-card-title>
+                                    <mat-card-subtitle>{{costo.amount | currency }}</mat-card-subtitle>
+                                    <button mat-icon-button color="warn" (click)="removeCostoIndirecto(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-card-header>
+                            </mat-card>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
+                        <button mat-raised-button (click)="validateAndProceed(stepper)" color="primary"
+                            class="primary-button">Siguiente</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="fifthFormGroup">
+        <form [formGroup]="fifthFormGroup" autocomplete="off">
+            <ng-template matStepLabel>Crear máquinaria</ng-template>
+            <div class="centered-card-container">
+                <mat-card class="centered-card">
+                    <mat-card-header>
+                        <mat-card-title>Máquinaria</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Descripción de la máquinaria</mat-label>
+                            <input matInput formControlName="description"
+                                placeholder="Introduce la descripción de la máquinaria">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Monto de la máquinaria</mat-label>
+                            <input matInput formControlName="amount" placeholder="Introduce el monto de la máquinaria"
+                                type="number">
+                        </mat-form-field>
+                        <div>
+                            <button mat-flat-button class="full-width" [disabled]="fifthFormGroup.invalidate"
+                                (click)="addMaquinaria()"><mat-icon>add</mat-icon> Agregar maquinaria</button>
+                        </div>
+                        <div *ngIf="maquinaria.length > 0" class="product-list">
+                            <mat-card *ngFor="let maquinaria of maquinaria; let i = index" class="product-item">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="product-avatar">
+                                        <img src="./icons/precision_manufacturing.png" alt="icon" class="product-icon">
+                                    </div>
+                                    <mat-card-title>{{maquinaria.description }}</mat-card-title>
+                                    <mat-card-subtitle>{{maquinaria.amount | currency }}</mat-card-subtitle>
+                                    <button mat-icon-button color="warn" (click)="removeMaquinaria(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-card-header>
+                            </mat-card>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
+                        <button mat-raised-button matStepperNext color="primary"
+                            class="primary-button">Siguiente</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Sección de resultados</ng-template>
+        <div class="centered-card-container">
+            <mat-card class="centered-card">
+                <mat-card-header>
+                    <mat-card-title>Sección de resultados</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="resultado-item" (click)="openModal('materiaPrima')">
+                        <mat-icon>attach_money</mat-icon>
+                        <div>
+                            <p>Costo Total de Materia Prima</p>
+                            <span>{{ getTotal('materiaPrima') | currency }}</span>
+                        </div>
+                        <mat-icon>chevron_right</mat-icon>
+                    </div>
+                    <div class="resultado-item" (click)="openModal('manoObra')">
+                        <mat-icon>work</mat-icon>
+                        <div>
+                            <p>Costo Total de Mano de Obra</p>
+                            <span>{{ getTotal('manoObra') | currency }}</span>
+                        </div>
+                        <mat-icon>chevron_right</mat-icon>
+                    </div>
+                    <div class="resultado-item" (click)="openModal('indirectos')">
+                        <mat-icon>build</mat-icon>
+                        <div>
+                            <p>Costo Total de Indirectos</p>
+                            <span>{{ getTotal('indirectos') | currency }}</span>
+                        </div>
+                        <mat-icon>chevron_right</mat-icon>
+                    </div>
+                    <div class="resultado-item" (click)="openModal('maquinaria')">
+                        <mat-icon>precision_manufacturing</mat-icon>
+                        <div>
+                            <p>Costo Total de Maquinaria</p>
+                            <span>{{ getTotal('maquinaria') | currency }}</span>
+                        </div>
+                        <mat-icon>chevron_right</mat-icon>
+                    </div>
+                    <div class="resultado-item">
+                        <mat-icon>attach_money</mat-icon>
+                        <div>
+                            <p>Costo Total de Producción</p>
+                            <span>{{ getTotal('produccion') | currency }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-raised-button (click)="exportToExcel()">Exportar a Excel</button>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button matStepperPrevious class="secondary-button">Anterior</button>
+                    <button mat-raised-button (click)="stepper.reset()" class="primary-button">Reiniciar</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </mat-step>
+</mat-stepper>
