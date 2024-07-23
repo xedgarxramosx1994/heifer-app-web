@@ -261,6 +261,7 @@ export class ProductComponent {
 
   dataToExport() {
     return [
+      { producto: this.firstFormGroup.get('name')?.value},
       { sección: 'Materia Prima', costo: this.getTotal('materiaPrima') },
       { sección: 'Mano de Obra', costo: this.getTotal('manoObra') },
       { sección: 'Indirectos', costo: this.getTotal('indirectos') },
