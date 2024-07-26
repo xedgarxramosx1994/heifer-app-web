@@ -1,54 +1,57 @@
 .login-container {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .login-card {
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  
-  .login-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .login-form-field {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-  
-  .login-button {
-    width: 100%;
-    margin-top: 1rem;
-    background-color: #003566;
-  }
-  
-  .forgot-password-link {
-    margin-top: 1rem;
-    color: #003566;
-    text-align: center;
-  }
-  
-  .welcome-image {
-    width: 60%;
-    background: url('https://bloglatam.jacto.com/wp-content/uploads/2022/07/tipos-de-ganaderia.jpeg') no-repeat center center;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .welcome-text {
-    color: white;
-    font-size: 3rem;
-  }
+  display: flex;
+  height: 100vh;
+}
 
-  .logo-container {
+.login-card {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.login-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.login-button {
+  width: 100%;
+  margin-top: 1rem;
+  background-color: #003566;
+}
+
+.forgot-password-link {
+  margin-top: 1rem;
+  color: #003566;
+  text-align: center;
+}
+
+.welcome-image {
+  width: 60%;
+  height: 100vh; /* Asegúrate de que el contenedor tenga altura */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border: 1px solid red; */ /* Puedes usar esto para depurar la visibilidad del contenedor */
+}
+
+.welcome-text {
+  color: white;
+  font-size: 3rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.logo-container {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -57,5 +60,5 @@
 .logo {
   max-width: 100%;
   height: auto;
-  width: 400px;; /* Ajusta este valor según sea necesario */
+  width: 400px; /* Ajusta este valor según sea necesario */
 }

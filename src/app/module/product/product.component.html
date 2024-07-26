@@ -4,6 +4,9 @@
             <ng-template matStepLabel>Crear producto</ng-template>
             <div class="centered-card-container">
                 <mat-card class="centered-card">
+                    <div class="logo-container">
+                        <img src="./LOGOS.png" alt="Logo" class="logo">
+                    </div>
                     <mat-card-header>
                         <mat-card-title>Crear producto</mat-card-title>
                     </mat-card-header>
@@ -45,6 +48,9 @@
             <ng-template matStepLabel>Crear materia prima</ng-template>
             <div class="centered-card-container">
                 <mat-card class="centered-card">
+                    <div class="logo-container">
+                        <img src="./LOGOS.png" alt="Logo" class="logo">
+                    </div>
                     <mat-card-header>
                         <mat-card-title>Materia prima</mat-card-title>
                     </mat-card-header>
@@ -55,15 +61,6 @@
                                 required>
                             <mat-error
                                 *ngIf="secondFormGroup.get('name').hasError('required') && secondFormGroup.get('name').touched">
-                                Campo obligatorio
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Cantidad utilizada</mat-label>
-                            <input matInput formControlName="quantity" placeholder="Introduce la cantidad utilizada"
-                                type="number" required>
-                            <mat-error
-                                *ngIf="secondFormGroup.get('quantity').hasError('required') && secondFormGroup.get('quantity').touched">
                                 Campo obligatorio
                             </mat-error>
                         </mat-form-field>
@@ -79,9 +76,18 @@
                             </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Costo por unidad</mat-label>
+                            <mat-label>Cantidad utilizada</mat-label>
+                            <input matInput formControlName="quantity" placeholder="Introduce la cantidad utilizada"
+                                type="number" required>
+                            <mat-error
+                                *ngIf="secondFormGroup.get('quantity').hasError('required') && secondFormGroup.get('quantity').touched">
+                                Campo obligatorio
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Costo por cantidad</mat-label>
                             <input matInput formControlName="unitCost" type="number"
-                                placeholder="Introduce el costo por unidad" required>
+                                placeholder="Introduce el costo por cantidad" required>
                             <mat-error
                                 *ngIf="secondFormGroup.get('unitCost').hasError('required') && secondFormGroup.get('unitCost').touched">
                                 Campo obligatorio
@@ -123,6 +129,9 @@
             <ng-template matStepLabel>Crear mano de obra</ng-template>
             <div class="centered-card-container">
                 <mat-card class="centered-card">
+                    <div class="logo-container">
+                        <img src="./LOGOS.png" alt="Logo" class="logo">
+                    </div>
                     <mat-card-header>
                         <mat-card-title>Mano de obra</mat-card-title>
                     </mat-card-header>
@@ -180,6 +189,9 @@
             <ng-template matStepLabel>Crear costos indirectos</ng-template>
             <div class="centered-card-container">
                 <mat-card class="centered-card">
+                    <div class="logo-container">
+                        <img src="./LOGOS.png" alt="Logo" class="logo">
+                    </div>
                     <mat-card-header>
                         <mat-card-title>Costos indirectos</mat-card-title>
                     </mat-card-header>
@@ -230,6 +242,9 @@
             <ng-template matStepLabel>Crear máquinaria</ng-template>
             <div class="centered-card-container">
                 <mat-card class="centered-card">
+                    <div class="logo-container">
+                        <img src="./LOGOS.png" alt="Logo" class="logo">
+                    </div>
                     <mat-card-header>
                         <mat-card-title>Máquinaria</mat-card-title>
                     </mat-card-header>
@@ -276,6 +291,9 @@
         <ng-template matStepLabel>Sección de resultados</ng-template>
         <div class="centered-card-container">
             <mat-card class="centered-card">
+                <div class="logo-container">
+                    <img src="./LOGOS.png" alt="Logo" class="logo">
+                </div>
                 <mat-card-header>
                     <mat-card-title>Sección de resultados</mat-card-title>
                 </mat-card-header>

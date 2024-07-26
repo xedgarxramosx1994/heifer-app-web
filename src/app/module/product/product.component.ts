@@ -244,7 +244,7 @@ export class ProductComponent {
       case 'indirectos':
         return this.costoIndirecto.reduce((total, item) => total + item.amount, 0);
       case 'maquinaria':
-        return this.maquinaria.reduce((total, item) => total + item.cost, 0);
+        return this.maquinaria.reduce((total, item) => total + item.amount, 0);
       case 'produccion':
         return this.getTotal('materiaPrima') + this.getTotal('manoObra') + this.getTotal('indirectos') + this.getTotal('maquinaria');
       default:
@@ -253,15 +253,15 @@ export class ProductComponent {
   }
 
   exportToExcel() {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataToExport());
-    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const worksheet: XLSX.WorkSheet = this.createSheetWithStyles();
+    const workbook: XLSX.WorkBook = { Sheets: { 'Hoja de Costos': worksheet }, SheetNames: ['Hoja de Costos'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, 'resultados');
+    this.saveAsExcelFile(excelBuffer, 'hoja_de_costos');
   }
 
   dataToExport() {
     return [
-      { producto: this.firstFormGroup.get('name')?.value},
+      { producto: this.firstFormGroup.get('name')?.value },
       { sección: 'Materia Prima', costo: this.getTotal('materiaPrima') },
       { sección: 'Mano de Obra', costo: this.getTotal('manoObra') },
       { sección: 'Indirectos', costo: this.getTotal('indirectos') },
@@ -270,35 +270,30 @@ export class ProductComponent {
     ];
   }
 
-  saveAsExcelFile(buffer: any, fileName: string) {
-    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
-  }
-
   openModal(section: string) {
     switch (section) {
       case 'materiaPrima':
         this.selectedData = {
           title: 'Costo Total de Materia Prima',
-          items: this.materiasPrimas.map(mp => `${ mp.name }: ${ mp.quantity } ${ this.getMeasureName(mp.unit) } - $ ${ mp.unitCost }`)
+          items: this.materiasPrimas.map(mp => `${mp.name}: ${mp.quantity} ${this.getMeasureName(mp.unit)} - $ ${mp.unitCost}`)
         };
         break;
       case 'manoObra':
         this.selectedData = {
           title: 'Costo Total de Mano de Obra',
-          items: this.manoDeObra.map(mo => `${ mo.type }: ${ mo.quantity } Hora(s) - $ ${ mo.hourlyCost }`)
+          items: this.manoDeObra.map(mo => `${mo.type}: ${mo.quantity} Hora(s) - $ ${mo.hourlyCost}`)
         };
         break;
       case 'indirectos':
         this.selectedData = {
           title: 'Costo Total de Indirectos',
-          items: this.costoIndirecto.map(ci => `${ ci.description }: $ ${ ci.amount }`)
+          items: this.costoIndirecto.map(ci => `${ci.description}: $ ${ci.amount}`)
         };
         break;
       case 'maquinaria':
         this.selectedData = {
           title: 'Costo Total de Maquinaria',
-          items: this.maquinaria.map(ma => `${ ma.description }: $ ${ ma.amount }`)
+          items: this.maquinaria.map(ma => `${ma.description}: $ ${ma.amount}`)
         };
         break;
     }
@@ -317,5 +312,90 @@ export class ProductComponent {
   closeModal() {
     this.showModal = false;
     this.selectedData = null;
+  }
+
+  createSheetWithStyles(): XLSX.WorkSheet {
+    // Obtener el nombre del producto del formulario
+    const productName = this.firstFormGroup.get('name').value || 'N/A';
+
+    // Crear una hoja de cálculo con datos y estilos
+    const data = [
+      ["HOJA DE COSTOS"],
+      ["EMPRESA: HEIFER - ECUADOR", "FECHA: " + new Date().toLocaleDateString()],
+      ["PRODUCTO: " + productName],
+      [],
+      ["MATERIA PRIMA", "CANTIDAD", "UNIDAD", "COSTO"],
+      ...this.materiasPrimas.length > 0
+        ? this.materiasPrimas.map(mp => [mp.name, mp.quantity, this.getMeasureName(mp.unit), `$${mp.unitCost.toFixed(2)}`])
+        : [["", "0", "", "$0.00"]],
+      ["TOTALES", "", "", `$${this.getTotal('materiaPrima').toFixed(2)}`],
+      [],
+      ["MANO DE OBRA", "CANTIDAD", "HORAS", "COSTO"],
+      ...this.manoDeObra.length > 0
+        ? this.manoDeObra.map(mo => [mo.type, mo.quantity, "Hora(s)", `$${mo.hourlyCost.toFixed(2)}`])
+        : [["", "0", "Hora(s)", "$0.00"]],
+      ["TOTALES", "", "", `$${this.getTotal('manoObra').toFixed(2)}`],
+      [],
+      ["COSTOS INDIRECTOS", "CANTIDAD", "", "COSTO"],
+      ...this.costoIndirecto.length > 0
+        ? this.costoIndirecto.map(ci => [ci.description, ci.amount, "", `$${ci.amount.toFixed(2)}`])
+        : [["", "0", "", "$0.00"]],
+      ["TOTALES", "", "", `$${this.getTotal('indirectos').toFixed(2)}`],
+      [],
+      ["MAQUINARIA", "CANTIDAD", "", "COSTO"],
+      ...this.maquinaria.length > 0
+        ? this.maquinaria.map(ma => [ma.description, ma.amount, "", `$${ma.amount.toFixed(2)}`])
+        : [["", "0", "", "$0.00"]],
+      ["TOTALES", "", "", `$${this.getTotal('maquinaria').toFixed(2)}`],
+      [],
+      ["RESUMEN DE COSTOS"],
+      ["MATERIA PRIMA", "", "", `$${this.getTotal('materiaPrima').toFixed(2)}`],
+      ["MANO DE OBRA", "", "", `$${this.getTotal('manoObra').toFixed(2)}`],
+      ["COSTOS INDIRECTOS", "", "", `$${this.getTotal('indirectos').toFixed(2)}`],
+      ["MAQUINARIA", "", "", `$${this.getTotal('maquinaria').toFixed(2)}`],
+      ["TOTAL", "", "", `$${this.getTotal('produccion').toFixed(2)}`],
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    // Aplicar estilos
+    this.applyStyles(ws);
+
+    return ws;
+  }
+  applyStyles(ws: XLSX.WorkSheet) {
+    if (!ws['!ref']) {
+      console.warn('No se puede aplicar estilos porque el rango de la hoja es undefined.');
+      return;
+    }
+
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_address = { c: C, r: R };
+        const cell_ref = XLSX.utils.encode_cell(cell_address);
+
+        if (!ws[cell_ref]) continue;
+
+        ws[cell_ref].s = {
+          font: { name: 'Arial', sz: 12, bold: false },
+          alignment: { vertical: 'center', horizontal: 'center' },
+          fill: { fgColor: { rgb: 'FFFFFF' } },
+        };
+
+        if (R === 0) { // Título principal
+          ws[cell_ref].s.font = { name: 'Arial', sz: 14, bold: true };
+        } else if (R === 1) { // Empresa y pedido
+          ws[cell_ref].s.font = { name: 'Arial', sz: 12, bold: true };
+        } else if (ws[cell_ref].v === "TOTALES" || ws[cell_ref].v === "TOTAL") { // Totales
+          ws[cell_ref].s.font = { name: 'Arial', sz: 12, bold: true };
+          ws[cell_ref].s.fill = { fgColor: { rgb: 'FFFF00' } };
+        }
+      }
+    }
+  }
+  saveAsExcelFile(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 }
