@@ -110,3 +110,17 @@ button[mat-icon-button] {
 mat-icon {
   margin-right: 16px;
 }
+
+.logo-container {
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  margin-bottom: 20px;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  width: 400px; /* Ajusta este valor según sea necesario */
+  margin: 0 auto; /* Centrar la imagen horizontalmente */
+}

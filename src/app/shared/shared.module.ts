@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule
   ],
   exports: [
+    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatStepperModule,

@@ -1,14 +1,19 @@
 <div class="login-container">
-    <mat-card class="login-card">
-      <div class="logo-container">
-        <img src="./LOGOS.png" alt="Logo" class="logo">
-      </div>
-      <p>
-        Bienvenido a nuestra plataforma de cálculo de costos de producción. Sabemos que la vida en el campo implica muchos desafíos, especialmente cuando se trata de calcular los costos de producción de tus productos. Por eso, hemos creado esta herramienta pensando en ti, para facilitarte la tarea y ayudarte a gestionar tus recursos de manera más eficiente. Ya sea que te dediques a la agricultura, ganadería, panadería u otra actividad, aquí encontrarás una forma simple y rápida de calcular tus costos y tomar decisiones informadas para mejorar tu productividad y rentabilidad.
-      </p>
-      <button mat-raised-button color="primary" class="login-button" routerLink="/cost">¡Comencemos!</button>
-    </mat-card>
-    <div class="welcome-image">
-      <h1 class="welcome-text"></h1>
+  <mat-card class="login-card">
+    <div class="logo-container">
+      <img src="./LOGOS.png" alt="Logo" class="logo">
     </div>
+    <p>
+      Bienvenido a la plataforma de cálculo de costos de producción. Sabemos que la vida en el sector rural implica
+      muchos desafíos, especialmente cuando se trata de calcular el precio de tus productos. Por eso, hemos creado esta
+      herramienta pensando en ti, para facilitarte la tarea y ayudarte a gestionar tus recursos de manera más eficiente.
+      Ya sea que te dediques a la agricultura, ganadería, panadería, si tienes un restaurante o cualquier otra
+      actividad, aquí encontrarás una forma simple y rápida de calcular tus costos y tomar decisiones informadas para
+      mejorar tu rentabilidad.
+    </p>
+    <button mat-raised-button color="primary" class="login-button" routerLink="/cost">¡Comencemos!</button>
+  </mat-card>
+  <div class="welcome-image" [ngStyle]="backgroundStyle">
+    <h1 class="welcome-text"></h1>
   </div>
+</div>
